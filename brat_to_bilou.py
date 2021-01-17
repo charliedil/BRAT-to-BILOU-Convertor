@@ -12,7 +12,7 @@ def parse_entities(filepath):
                 temp = []
                 temp.append(l.split("\t")[2])
                 temp.append(l.split("\t")[1].split(" ")[0])
-                temp.append((l.split("\t")[1].split(" ")[1],l.split("\t")[1].split(" ")[2]))
+                temp.append((l.split("\t")[1].split(" ")[1],l.split("\t")[1].split(" ")[len(l.split("\t")[1].split(" "))-1]))
                 entities.append(temp)
     return entities
 
