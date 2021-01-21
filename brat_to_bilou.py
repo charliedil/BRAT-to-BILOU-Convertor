@@ -39,32 +39,33 @@ for filename in os.listdir(args.input_dir):
             tagged_text = nltk.pos_tag(tokenized_text)
             with open(args.output_dir+filename.split(".")[0]+".ann","w") as out:
                 bflag = False
+                tracker = ""
                 for i in range(len(tagged_text)):
                     out.write(tagged_text[i][0]+"\t"+tagged_text[i][1]+"\t")
                     flag = True
-                    tracker = ""
                     for e in entities:
                         if int(e[2][0])-1 <= spans[i][0] and int(e[2][1])+1 >=spans[i][1]:
                             if len(e[0].split(" "))==1 and (len(e[0])==1 or (len(e[0])!=1 and len(tagged_text[i][0])!=1)):
-                                out.write("U-"+e[1]+"\t"+str(spans[i][0])+" "+str(spans[i][1])+"\n")
+                                out.write("U-"+e[1]+"\n")
                                 bflag = False
                                 flag=False
                                 break
                             elif e[0].split(" ")[0] == tagged_text[i][0]:
-                                out.write("B-"+e[1]+"\t"+str(spans[i][0])+" "+str(spans[i][1])+"\n")
+                                out.write("B-"+e[1]+"\n")
                                 tracker += tagged_text[i][0]
                                 flag=False
                                 bflag = True
                                 break
-                            elif e[0].split(" ")[len(e[0].split(" "))-1] == tagged_text[i][0] or e[0].replace(" ","")==tracker:
-                                out.write("L-"+e[1]+"\t"+str(spans[i][0])+" "+str(spans[i][1])+"\n")
+                            elif e[0].split(" ")[len(e[0].split(" "))-1] == tagged_text[i][0] or e[0].replace(" ","")==tracker+tagged_text[i][0]:
+                                out.write("L-"+e[1]+"\n")
                                 flag=False
                                 bflag=False
+                                tracker=""
                                 break
                             elif bflag == True:
-                                out.write("I-"+e[1]+"\t"+str(spans[i][0])+" "+str(spans[i][1])+"\n")
+                                out.write("I-"+e[1]+"\n")
                                 tracker += tagged_text[i][0]
                                 flag=False
                                 break
                     if flag:
-                        out.write("O"+"\t"+str(spans[i][0])+" "+str(spans[i][1])+"\n")
+                        out.write("O"+"\n")
